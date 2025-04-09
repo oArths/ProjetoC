@@ -17,27 +17,31 @@ int tamanho = 0;
 
 void limparBuffer() {
   int c;
-  while ((c = getchar()) != '\n' && c != EOF);  // descarta o restante até o \n
+  // Limpa o buffer de entrada até encontrar um '\n' ou EOF
+  while ((c = getchar()) != '\n' && c != EOF);
 }
 
 int lerStringSegura(char *destino, int tamanho_max) {
+  //* Verifica se o tamanho máximo é maior que 0
   if (fgets(destino, tamanho_max, stdin) == NULL) {
-    return 0;  
+    return 0;
   }
-
+  //* Remove o caractere de nova linha, se presente
   size_t len = strlen(destino);
-
+  //* Verifica se o último caractere é '\n' e o substitui por '\0'
   if (len > 0 && destino[len - 1] == '\n') {
+    //* Substitui o '\n' por '\0' para finalizar a string corretamente
     destino[len - 1] = '\0';
-    return 1;  
+    return 1;
   } else {
-    
+    //* Se o tamanho máximo foi atingido, remove o restante da linha
     limparBuffer();
-    return 2;  
+    return 2;
   }
 }
 
 int main() {
+  //* Definindo o locale para aceitar caracteres especiais como "Ç" e "ã"
   setlocale(LC_ALL, "pt_BR.UTF-8");
 
   int op;
@@ -45,7 +49,7 @@ int main() {
     printf("\nBem vindo ao C-Note\n");
     printf(
         "\n Escolha umas das opçôes:\n 1 - Criar Nota\n 2 - Editar uma Nota\n 3 "
-        "- Listar Notas\n 4 - Excluir uma Nota\n\n ");
+        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Sair\n\n ");
 
     scanf("%d", &op);
     getchar();
@@ -53,7 +57,7 @@ int main() {
 
     switch (op) {
       case 1:
-        
+
         printf("Adicione um titulo a sua nota: 40 Char Max \n");
         int status_titulo = lerStringSegura(novaNota.titulo, MAX_TITULO + 1);
         if (status_titulo == 0) {
@@ -88,11 +92,14 @@ int main() {
       case 4:
         DeletarNota();
         break;
+        case 5:
+        printf("Saindo do programa...\n");
+        break;
       default:
         printf("Escolha uma opção invalida!");
         break;
     }
-  } while (1);
+  } while (op != 5);
 
   return 0;
 }
@@ -134,7 +141,7 @@ void CriarNota(listaNotas novaNota) {
   void *temp = realloc(Listas, tamanho * sizeof(listaNotas));
 
   if (temp == NULL) {
-    printf("Erro ao alocar memC3ria!\n");
+    printf("Erro ao alocar memoria!\n");
     exit(1);
   }
 
