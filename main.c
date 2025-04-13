@@ -4,16 +4,11 @@
 //$OutputEncoding = [Console]::OutputEncoding =[System.Text.UTF8Encoding]::new()
 // chcp 65001
 
-void CriarNota(listaNotas novaNota);
-void lerString(char *str, int tamanhoMax);
-void EditarNota();
-void ListarNota();
-void limparBuffer();
-void DeletarNota();
-void Clear();
+
 
 listaNotas *Listas = NULL;
-int tamanho = 0;
+User *usuarios = NULL;
+int tamanho = 0, totalUser = 0;
 
 void limparBuffer() {
   int c;
@@ -92,7 +87,7 @@ int main() {
       case 4:
         DeletarNota();
         break;
-        case 5:
+      case 5:
         printf("Saindo do programa...\n");
         break;
       default:
@@ -160,3 +155,55 @@ void CriarNota(listaNotas novaNota) {
 }
 void EditarNota() { printf("foi 2"); }
 void DeletarNota() { printf("foi 2"); }
+
+void Register() {
+  char nome[MAX_NOME], senha[MAX_SENHA];
+  while (1) {
+    printf("Digite seu nome: min 3 char");
+    lerStringSegura(nome, MAX_NOME);
+    if (strlen(nome) < 3) {
+      printf("Digite um nome valido");
+    }
+    break;
+  }
+  while (1) {
+    printf("Digite sua senha:  8 char");
+    lerStringSegura(senha, MAX_SENHA);
+    if (strlen(senha) != 8) {
+      printf("Digite uma senha valido");
+    }
+    break;
+  }
+  usuarios->id = totalUser + 1;
+  strcpy(usuarios->nome, nome);
+  strcpy(usuarios->senha, senha);
+
+  printf("Usuario cadastrado com Sucesso\n");
+  totalUser++;
+  usuarios = realloc(usuarios, totalUser * sizeof(User));
+  Login();
+}
+
+void Login() {
+  int tentativa = 0;
+  char nome[MAX_NOME], senha[MAX_SENHA];
+  while (tentativa != 3) {
+    printf("Bem vindo ao C-Note\n");
+    printf("Informar seu dados para Logar\n");
+    printf("Digite seu nome de usuario: ");
+    lerStringSegura(nome, MAX_NOME);
+    printf("Digite sua senha: ");
+    lerStringSegura(senha, MAX_SENHA);
+
+    for (int i = 0; i <= totalUser; i++) {
+      if (realizarlogin(nome, senha, usuarios[i]))
+        ;
+      printf("Login realzado com sucesso!!");
+      // entrar na função conta para que possa acessar as funçõs
+    }
+    tentativa++;
+    printf("Login falhou. Tentativa %d de 3.\n", tentativa);
+  }
+  printf("Número máximo de tentativas alcançado. Encerrando...\n");
+}
+bool realizarlogin(char *nome, char *senha, User usuario) { return strcmp(nome, usuario.nome) == 0 && strcmp(senha, usuario.senha) == 0; }
