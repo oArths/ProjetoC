@@ -1,6 +1,5 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
-#include <stdbool.h>
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -16,32 +15,38 @@
 #define MAX_TAG 20
 #define MAX_NOME 40
 #define MAX_SENHA 8
+
 typedef struct Tags {
   char tag[3][MAX_TAG + 1];
 } Tags;
 
-typedef struct {
+typedef struct Nota {
   int id;
   char titulo[MAX_TITULO + 1];
   char texto[MAX_TEXTO + 1];
   struct Tags tags;
-} listaNotas;
+  struct Nota *proximo;
+} Nota;
 
 typedef struct User {
   int id;
   char nome[40];
   char senha[8];
+  Nota *notas;
 } User;
 
-void CriarNota(listaNotas novaNota);
-void lerString(char *str, int tamanhoMax);
-void EditarNota();
-void ListarNota();
-void limparBuffer();
-void DeletarNota();
-void Clear();
-void Register();
 void Login();
-bool realizarlogin(char nome[], char senha[], User usuario);
+void Register();
+void Conta(User *user);
+void CriarNota(User *user);
+void EditarNota(User *user);
+void ListarNota(User *user);
+void DeletarNota(User *user);
 
-#endif  
+void limparBuffer();
+void Clear();
+void lerString(char *str, int tamanhoMax);
+bool realizarlogin(char nome[], char senha[], User usuario);
+#include "helps.h"
+
+#endif
