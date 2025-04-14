@@ -4,41 +4,114 @@
 //$OutputEncoding = [Console]::OutputEncoding =[System.Text.UTF8Encoding]::new()
 // chcp 65001
 
-
-
-listaNotas *Listas = NULL;
+// listaNotas *Listas = NULL;
 User *usuarios = NULL;
-int tamanho = 0, totalUser = 0;
-
-void limparBuffer() {
-  int c;
-  // Limpa o buffer de entrada até encontrar um '\n' ou EOF
-  while ((c = getchar()) != '\n' && c != EOF);
-}
-
-int lerStringSegura(char *destino, int tamanho_max) {
-  //* Verifica se o tamanho máximo é maior que 0
-  if (fgets(destino, tamanho_max, stdin) == NULL) {
-    return 0;
-  }
-  //* Remove o caractere de nova linha, se presente
-  size_t len = strlen(destino);
-  //* Verifica se o último caractere é '\n' e o substitui por '\0'
-  if (len > 0 && destino[len - 1] == '\n') {
-    //* Substitui o '\n' por '\0' para finalizar a string corretamente
-    destino[len - 1] = '\0';
-    return 1;
-  } else {
-    //* Se o tamanho máximo foi atingido, remove o restante da linha
-    limparBuffer();
-    return 2;
-  }
-}
+User *userLogado = NULL;
+int totalUser = 0;
 
 int main() {
   //* Definindo o locale para aceitar caracteres especiais como "Ç" e "ã"
   setlocale(LC_ALL, "pt_BR.UTF-8");
+  int op;
+  do {
+    printf("\nBem vindo ao C-Note\n");
+    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
 
+    scanf("%d", &op);
+    getchar();
+    switch (op) {
+      case 1:
+        Login();
+        break;
+      case 2:
+        Register();
+        break;
+      case 3:
+        printf("Saindo do programa...\n");
+        break;
+      default:
+        printf("Escolha uma opção invalida!");
+        break;
+    }
+  } while (op != 3);
+  // Liberar a memória alocada para usuários ao sair
+  for (int i = 0; i < totalUser; i++) {
+    Nota *atual = usuarios[i].notas;
+    while (atual != NULL) {
+      Nota *proximo = atual->proximo;
+      free(atual);
+      atual = proximo;
+    }
+  }
+  free(usuarios);
+  return 0;
+}
+
+void Register() {
+  char nome[MAX_NOME], senha[MAX_SENHA];
+  while (1) {
+    printf("Digite seu usuario: min 3 char\n");
+    lerStringSegura(nome, MAX_NOME);
+    if (strlen(nome) < 3) {
+      printf("Digite um nome valido\n");
+    }
+    break;
+  }
+  while (1) {
+    printf("Digite sua senha:  8 char\n");
+    lerStringSegura(senha, MAX_SENHA);
+    if (strlen(senha) != 8) {
+      printf("Digite uma senha valido");
+    }
+    break;
+  }
+
+  totalUser++;
+  usuarios = (User *)realloc(usuarios, totalUser * sizeof(User));
+  if (usuarios == NULL) {
+    printf("Erro ao alocar memória para novo usuário!\n");
+    exit(1);
+  }
+  usuarios[totalUser - 1].id = totalUser;
+  strncpy(usuarios[totalUser - 1].nome, nome, MAX_NOME);
+  usuarios[totalUser - 1].nome[MAX_NOME] = '\0';
+  strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA);
+  usuarios[totalUser - 1].senha[MAX_SENHA] = '\0';
+  usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como vazia
+  printf("Usuário cadastrado com Sucesso!\n");
+  Login();
+}
+
+void Login() {
+  int tentativa = 0;
+  char nome[MAX_NOME], senha[MAX_SENHA];
+  while (tentativa != 3) {
+    printf("\nBem vindo ao C-Note\n\n");
+    printf("Informar seu dados para Logar\n");
+    printf("Digite seu nome de usuario:\n ");
+    lerStringSegura(nome, MAX_NOME);
+    printf("Digite sua senha:\n ");
+    lerStringSegura(senha, MAX_SENHA);
+
+    for (int i = 0; i < totalUser; i++) {
+      printf("Digitado: Nome='%s', Senha='%s'\n", nome, senha);
+      printf("Registrado: Nome='%s', Senha='%s'\n", usuarios[i].nome, usuarios[i].senha);
+      // entrar na função conta para que possa acessar as funçõs
+      if (realizarlogin(nome, senha, usuarios[i])) {
+        printf("Login realzado com sucesso!!\n");
+        printf("\n iniciando seção..");
+        userLogado = &usuarios[i];
+        Conta(userLogado);
+        return;
+      }
+    }
+    tentativa++;
+    printf("Login falhou. Tentativa %d de 3.\n", tentativa);
+  }
+  printf("Número máximo de tentativas alcançado. Encerrando...\n");
+}
+
+void Conta(User *user) {
   int op;
   do {
     printf("\nBem vindo ao C-Note\n");
@@ -48,44 +121,19 @@ int main() {
 
     scanf("%d", &op);
     getchar();
-    listaNotas novaNota;
 
     switch (op) {
       case 1:
-
-        printf("Adicione um titulo a sua nota: 40 Char Max \n");
-        int status_titulo = lerStringSegura(novaNota.titulo, MAX_TITULO + 1);
-        if (status_titulo == 0) {
-          printf("Entrada cancelada pelo usuário\n");
-          return 1;
-        }
-
-        printf("Adicione um texto a sua nota: 200 Char Max \n");
-        int status_texto = lerStringSegura(novaNota.texto, MAX_TEXTO + 1);
-        if (status_texto == 0) {
-          printf("Entrada cancelada pelo usuário\n");
-          return 1;
-        }
-
-        for (int i = 0; i < 3; i++) {
-          printf("Adicione uma tag a sua nota: 20 Char Max \n");
-          int status_tag = lerStringSegura(novaNota.tags.tag[i], MAX_TAG + 1);
-          if (status_tag == 0) {
-            printf("Entrada cancelada pelo usuário\n");
-            return 1;
-          }
-        }
-        novaNota.id = tamanho + 1;
-        CriarNota(novaNota);
+        CriarNota(user);
         break;
       case 2:
-        EditarNota();
+        EditarNota(user);
         break;
       case 3:
-        ListarNota();
+        ListarNota(user);
         break;
       case 4:
-        DeletarNota();
+        DeletarNota(user);
         break;
       case 5:
         printf("Saindo do programa...\n");
@@ -96,114 +144,78 @@ int main() {
     }
   } while (op != 5);
 
-  return 0;
+  return;
 }
-void ListarNota() {
-  // divide o tamanho total da Lista pela do primeiro item
-  // int tamanho = sizeof(Listas) / sizeof(Listas[0]);
-
-  if (tamanho == 0) {
-    printf("Nenhuma nota cadastrada!\n");
+void CriarNota(User *user) {
+  Nota *novaNota = (Nota *)malloc(sizeof(Nota));
+  if (novaNota == NULL) {
+    printf("Erro ao alocar memória para a nova nota!\n");
+    return;
+  }
+  printf("Adicione um titulo a sua nota: 40 Char Max \n");
+  int status_titulo = lerStringSegura(novaNota->titulo, MAX_TITULO + 1);
+  if (status_titulo == 0) {
+    printf("Entrada cancelada pelo usuário\n");
+    free(novaNota);
     return;
   }
 
-  // loop para ler todas as tags armazenadas no array
-  for (int i = 0; i < tamanho; i++) {
-    // funC'C#o que verifica se a nota nC#o esta vazia antes de imprimir
-
-    printf("---------------------\n");
-    // acessando o indice de acordo com
-    printf("Id: %i\n", Listas[i].id);
-    printf("Titulo: %s\n", Listas[i].titulo);
-    printf("Texto: %s\n", Listas[i].texto);
-    printf("Tags: ");
-    for (int j = 0; j < 3; j++) {
-      // verificando se a tag nC#o C) vazia ja que se for vazia ela vai conter apenas'\n'
-      if (Listas[i].tags.tag[j][0] != '\0') {
-        printf("%s ", Listas[i].tags.tag[j]);
-      }
-    }
-    printf("\n---------------------");
+  printf("Adicione um texto a sua nota: 200 Char Max \n");
+  int status_texto = lerStringSegura(novaNota->texto, MAX_TEXTO + 1);
+  if (status_texto == 0) {
+    printf("Entrada cancelada pelo usuário\n");
+    free(novaNota);
+    return;
   }
-}
-
-void CriarNota(listaNotas novaNota) {
-  // incrementando o contador  por estar criando uma nova nota
-  tamanho++;
-  // verificamos se existe espaC'o de memoria em Listas pra guarda a nova nota com o realloc, caso nC#o tenha
-  //  ele retorna null, com isso pra evitar perder os dados ao tentar realocar os dados atribuimos o realloc
-  //  ao um ponteiro que guarda o endereC'o "*temp" de memoria dos dados da listas, caso  de certo ele "temp" passa os dados pra Listas
-  void *temp = realloc(Listas, tamanho * sizeof(listaNotas));
-
-  if (temp == NULL) {
-    printf("Erro ao alocar memoria!\n");
-    exit(1);
-  }
-
-  Listas = temp;
-
-  Listas[tamanho - 1].id = novaNota.id;
-  // strncpy(destino , origem, remover o ultimo caracter) C) responsavel por transferir um dado de uma variavel para outra
-  strncpy(Listas[tamanho - 1].titulo, novaNota.titulo, sizeof(Listas[tamanho - 1].titulo) - 1);
-
-  strncpy(Listas[tamanho - 1].texto, novaNota.texto, sizeof(Listas[tamanho - 1].texto) - 1);
 
   for (int i = 0; i < 3; i++) {
-    strncpy(Listas[tamanho - 1].tags.tag[i], novaNota.tags.tag[i], sizeof(Listas[tamanho - 1].tags.tag[i]) - 1);
+    printf("Adicione uma tag a sua nota: 20 Char Max \n");
+    int status_tag = lerStringSegura(novaNota->tags.tag[i], MAX_TAG + 1);
+    if (status_tag == 0) {
+      printf("Entrada cancelada pelo usuário\n");
+      free(novaNota);
+      return;
+    }
   }
+  int nextId = 1;
+  if (user->notas != NULL) {
+    Nota *atual = user->notas;
+    while (atual->proximo != NULL) {
+      atual = atual->proximo;
+    }
+    nextId = atual->id + 1;
+  }
+  novaNota->id = nextId;
+  novaNota->proximo = user->notas;  // Nova nota aponta para a antiga primeira nota
+  user->notas = novaNota;           // Atualiza o ponteiro da lista de notas do usuário
+
   printf("Nota Salva com sucesso!!\n");
 }
-void EditarNota() { printf("foi 2"); }
-void DeletarNota() { printf("foi 2"); }
-
-void Register() {
-  char nome[MAX_NOME], senha[MAX_SENHA];
-  while (1) {
-    printf("Digite seu nome: min 3 char");
-    lerStringSegura(nome, MAX_NOME);
-    if (strlen(nome) < 3) {
-      printf("Digite um nome valido");
-    }
-    break;
+void ListarNota(User *user) {
+  // divide o tamanho total da Lista pela do primeiro item
+  if (user->notas == NULL) {
+    printf("Nenhuma nota cadastrada para este usuário!\n");
+    return;
   }
-  while (1) {
-    printf("Digite sua senha:  8 char");
-    lerStringSegura(senha, MAX_SENHA);
-    if (strlen(senha) != 8) {
-      printf("Digite uma senha valido");
-    }
-    break;
-  }
-  usuarios->id = totalUser + 1;
-  strcpy(usuarios->nome, nome);
-  strcpy(usuarios->senha, senha);
 
-  printf("Usuario cadastrado com Sucesso\n");
-  totalUser++;
-  usuarios = realloc(usuarios, totalUser * sizeof(User));
-  Login();
+  printf("\n----- Suas Notas -----\n");
+  Nota *atual = user->notas;
+
+  // loop para ler todas as tags armazenadas no array
+  while (atual != NULL) {
+    printf("---------------------\n");
+    printf("Id: %i\n", atual->id);
+    printf("Titulo: %s\n", atual->titulo);
+    printf("Texto: %s\n", atual->texto);
+    printf("Tags: ");
+    for (int j = 0; j < 3; j++) {
+      if (atual->tags.tag[j][0] != '\0') {
+        printf("%s ", atual->tags.tag[j]);
+      }
+    }
+    printf("\n---------------------\n");
+    atual = atual->proximo;
+  }
 }
-
-void Login() {
-  int tentativa = 0;
-  char nome[MAX_NOME], senha[MAX_SENHA];
-  while (tentativa != 3) {
-    printf("Bem vindo ao C-Note\n");
-    printf("Informar seu dados para Logar\n");
-    printf("Digite seu nome de usuario: ");
-    lerStringSegura(nome, MAX_NOME);
-    printf("Digite sua senha: ");
-    lerStringSegura(senha, MAX_SENHA);
-
-    for (int i = 0; i <= totalUser; i++) {
-      if (realizarlogin(nome, senha, usuarios[i]))
-        ;
-      printf("Login realzado com sucesso!!");
-      // entrar na função conta para que possa acessar as funçõs
-    }
-    tentativa++;
-    printf("Login falhou. Tentativa %d de 3.\n", tentativa);
-  }
-  printf("Número máximo de tentativas alcançado. Encerrando...\n");
-}
-bool realizarlogin(char *nome, char *senha, User usuario) { return strcmp(nome, usuario.nome) == 0 && strcmp(senha, usuario.senha) == 0; }
+void EditarNota(User *user) { printf("foi 2"); }
+void DeletarNota(User *user) { printf("foi 2"); }
