@@ -14,7 +14,7 @@
 #define MAX_TEXTO 200
 #define MAX_TAG 20
 #define MAX_NOME 40
-#define MAX_SENHA 8
+#define MAX_SENHA 20
 
 typedef struct Tags {
   char tag[3][MAX_TAG + 1];

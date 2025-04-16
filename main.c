@@ -1,10 +1,8 @@
 #include "includes.h"
-
 // Rodar esses comando no terminal para que ele aceite "Ç"
 //$OutputEncoding = [Console]::OutputEncoding =[System.Text.UTF8Encoding]::new()
 // chcp 65001
 
-// listaNotas *Listas = NULL;
 User *usuarios = NULL;
 User *userLogado = NULL;
 int totalUser = 0;
@@ -15,10 +13,10 @@ int main() {
   int op;
   do {
     printf("\nBem vindo ao C-Note\n");
-    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
-
+    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Limpar\n 4 - Sair\n\n ");
     scanf("%d", &op);
     getchar();
+
     switch (op) {
       case 1:
         Login();
@@ -27,13 +25,16 @@ int main() {
         Register();
         break;
       case 3:
+        Clear();
+        break;
+      case 4:
         printf("Saindo do programa...\n");
         break;
       default:
         printf("Escolha uma opção invalida!");
         break;
     }
-  } while (op != 3);
+  } while (op != 4);
   // Liberar a memória alocada para usuários ao sair
   for (int i = 0; i < totalUser; i++) {
     Nota *atual = usuarios[i].notas;
@@ -58,10 +59,10 @@ void Register() {
     break;
   }
   while (1) {
-    printf("Digite sua senha:  8 char\n");
+    printf("Digite sua senha: max 20 char\n");
     lerStringSegura(senha, MAX_SENHA);
-    if (strlen(senha) != 8) {
-      printf("Digite uma senha valido");
+    if (strlen(senha) < 4) {
+      printf("Digite uma senha deve ter no minimo 4 caracteres");
     }
     break;
   }
@@ -117,7 +118,7 @@ void Conta(User *user) {
     printf("\nBem vindo ao C-Note\n");
     printf(
         "\n Escolha umas das opçôes:\n 1 - Criar Nota\n 2 - Editar uma Nota\n 3 "
-        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Sair\n\n ");
+        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Limpar\n 6 - Sair\n\n ");
 
     scanf("%d", &op);
     getchar();
@@ -136,13 +137,16 @@ void Conta(User *user) {
         DeletarNota(user);
         break;
       case 5:
+        Clear();
+        break;
+      case 6:
         printf("Saindo do programa...\n");
         break;
       default:
         printf("Escolha uma opção invalida!");
         break;
     }
-  } while (op != 5);
+  } while (op != 6);
 
   return;
 }

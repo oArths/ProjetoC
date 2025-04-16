@@ -27,7 +27,6 @@ int lerStringSegura(char *destino, int tamanho_max) {
 void Clear() {
 #ifdef _WIN32
   system("cls");
-  system("clear");
 #endif
 }
 bool realizarlogin(char *nome, char *senha, User usuario) { return strcmp(nome, usuario.nome) == 0 && strcmp(senha, usuario.senha) == 0; }
