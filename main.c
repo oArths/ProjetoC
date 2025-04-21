@@ -1,7 +1,4 @@
 #include "includes.h"
-// Rodar esses comando no terminal para que ele aceite "Ç"
-//$OutputEncoding = [Console]::OutputEncoding =[System.Text.UTF8Encoding]::new()
-// chcp 65001
 
 User *usuarios = NULL;
 User *userLogado = NULL;
@@ -10,6 +7,8 @@ int totalUser = 0;
 int main() {
   //* Definindo o locale para aceitar caracteres especiais como "Ç" e "ã"
   setlocale(LC_ALL, "pt_BR.UTF-8");
+  // Rodar esses comando no terminal para que ele aceite "Ç"
+  system("powershell -NoProfile -Command \"$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()\"");
   int op;
   do {
     printf("\nBem vindo ao C-Note\n");
@@ -222,4 +221,4 @@ void ListarNota(User *user) {
   }
 }
 void EditarNota(User *user) { printf("foi 2"); }
-void DeletarNota(User *user) { printf("foi 2"); }
+void DeletarNota(User *user) { printf("foi 3"); }

@@ -47,6 +47,7 @@ void limparBuffer();
 void Clear();
 void lerString(char *str, int tamanhoMax);
 bool realizarlogin(char nome[], char senha[], User usuario);
+
 #include "helps.h"
 
 #endif
