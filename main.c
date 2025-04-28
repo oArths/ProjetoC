@@ -94,8 +94,8 @@ void Login() {
     lerStringSegura(senha, MAX_SENHA);
 
     for (int i = 0; i < totalUser; i++) {
-      printf("Digitado: Nome='%s', Senha='%s'\n", nome, senha);
-      printf("Registrado: Nome='%s', Senha='%s'\n", usuarios[i].nome, usuarios[i].senha);
+      // printf("Digitado: Nome='%s', Senha='%s'\n", nome, senha);
+      // printf("Registrado: Nome='%s', Senha='%s'\n", usuarios[i].nome, usuarios[i].senha);
       // entrar na função conta para que possa acessar as funçõs
       if (realizarlogin(nome, senha, usuarios[i])) {
         printf("Login realzado com sucesso!!\n");
@@ -220,5 +220,69 @@ void ListarNota(User *user) {
     atual = atual->proximo;
   }
 }
-void EditarNota(User *user) { printf("foi 2"); }
+void EditarNota(User *user) {
+  char idSolicitado[MAX_ID];
+  do {
+    printf("Digite o id da Nota que deseja editar:\n");
+    lerStringSegura(idSolicitado, MAX_ID);
+
+    if (strspn(idSolicitado, "0123456789") != strlen(idSolicitado)) {
+      printf("Entrada inválida! Digite apenas números.\n");
+    }
+  } while (strspn(idSolicitado, "0123456789") != strlen(idSolicitado));
+
+  if (user->notas == NULL) {
+    printf("Nenhuma nota cadastrada para este usuário!\n");
+    return;
+  }
+  Nota *atual = user->notas;
+  Nota CopiaAtual, EdicaoAtual;
+  int idSolicitadoInt = atoi(idSolicitado);
+
+  while (atual != NULL) {
+    if (atual->id == idSolicitadoInt) {
+      CopiaAtual.id = atual->id;
+      strcpy(CopiaAtual.titulo, atual->titulo);
+      strcpy(CopiaAtual.texto, atual->texto);
+      for (int i = 0; i < 3; i++) {
+        strcpy(CopiaAtual.tags.tag[i], atual->tags.tag[i]);
+      }
+      break;
+    } else {
+      atual = atual->proximo;
+    }
+  }
+  printf("\n Modo de Edição?\n");
+  printf("Digite o novo valor (ou pressione Enter para manter o valor atual)\n");
+  printf("Titulo atual: %s\n", CopiaAtual.titulo);
+  printf("Novo Titulo: ");
+  lerStringSegura(EdicaoAtual.titulo, MAX_TITULO);
+  printf("Texto atual: %s\n", CopiaAtual.texto);
+  if (EdicaoAtual.titulo[0] != '\0') {
+    strcpy(CopiaAtual.titulo, EdicaoAtual.titulo);  
+  }
+  printf("Novo Texto: ");
+  lerStringSegura(EdicaoAtual.texto, MAX_TEXTO);
+  if (EdicaoAtual.texto[0] != '\0') {
+    strcpy(CopiaAtual.texto, EdicaoAtual.texto);  
+  }
+  for (int j = 0; j < 3; j++) {
+    if (atual->tags.tag[j][0] != '\0') {
+      printf("Tag %d°: %s\n", j, atual->tags.tag[j]);
+      printf("Nova Tag %d°: ");
+      lerStringSegura(EdicaoAtual.tags.tag[j], MAX_TAG);
+
+      if (EdicaoAtual.tags.tag[j][0] != '\0') {
+        strcpy(CopiaAtual.tags.tag[j], EdicaoAtual.tags.tag[j]);  
+      }
+    }
+  }
+  atual->id = CopiaAtual.id;                 
+  strcpy(atual->titulo, CopiaAtual.titulo);  
+  strcpy(atual->texto, CopiaAtual.texto);    
+  for (int i = 0; i < 3; i++) {
+    strcpy(atual->tags.tag[i], CopiaAtual.tags.tag[i]);
+  }
+  printf("\nNota atualizada com sucesso!\n");
+}
 void DeletarNota(User *user) { printf("foi 3"); }
