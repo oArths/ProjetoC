@@ -15,7 +15,7 @@
 #define MAX_TAG 20
 #define MAX_NOME 40
 #define MAX_SENHA 20
-
+#define MAX_ID 9999
 typedef struct Tags {
   char tag[3][MAX_TAG + 1];
 } Tags;
@@ -31,7 +31,7 @@ typedef struct Nota {
 typedef struct User {
   int id;
   char nome[40];
-  char senha[8];
+  char senha[20];
   Nota *notas;
 } User;
 
