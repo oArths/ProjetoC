@@ -24,10 +24,39 @@ int lerStringSegura(char *destino, int tamanho_max) {
     return 2;
   }
 }
-void Clear() {
-#ifdef _WIN32
-  system("cls");
-#endif
-}
 bool realizarlogin(char *nome, char *senha, User usuario) { return strcmp(nome, usuario.nome) == 0 && strcmp(senha, usuario.senha) == 0; }
+
+bool criarBanco() {
+  sqlite3 *db;
+  char *err_msg = 0;
+
+  // Abre ou cria o banco
+  int rc = sqlite3_open("teste.db", &db);
+  sqlite3_exec(db, "PRAGMA foreign_keys = ON;", 0, 0, 0);
+
+  if (rc != SQLITE_OK) {
+    printf("Erro ao abrir o banco de dados: %s\n", sqlite3_errmsg(db));
+    return 1;
+  }
+
+  // Comando SQL para criar uma tabela
+  const char *sql =
+      "CREATE TABLE IF NOT EXISTS Notas (Id INTEGER PRIMARY KEY, Titulo TEXT, Texto TEXT);"
+      "CREATE TABLE IF NOT EXISTS Tags (Id INTEGER PRIMARY KEY, Tag TEXT UNIQUE);"
+      "CREATE TABLE IF NOT EXISTS NotaTags (NotaId INTEGER, TagId INTEGER, "
+      "FOREIGN KEY (NotaId) REFERENCES Notas(Id), FOREIGN KEY (TagId) REFERENCES Tags(Id), PRIMARY KEY (NotaId, TagId));";
+
+  rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+
+  if (rc != SQLITE_OK) {
+    printf("Erro SQL: %s\n", err_msg);
+    sqlite3_free(err_msg);
+    return false;
+  } else {
+    printf("Tabela criada com sucesso!\n");
+    return true;
+  }
+
+  sqlite3_close(db);
+}
 #endif

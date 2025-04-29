@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "sqlite3.h"
+
 #define bool _Bool
 #define true 1
 #define false 0
@@ -37,6 +39,7 @@ typedef struct User {
 
 void Login();
 void Register();
+bool criarBanco();
 void Conta(User *user);
 void CriarNota(User *user);
 void EditarNota(User *user);
@@ -44,7 +47,6 @@ void ListarNota(User *user);
 void DeletarNota(User *user);
 
 void limparBuffer();
-void Clear();
 void lerString(char *str, int tamanhoMax);
 bool realizarlogin(char nome[], char senha[], User usuario);
 
