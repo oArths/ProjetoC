@@ -9,10 +9,14 @@ int main() {
   setlocale(LC_ALL, "pt_BR.UTF-8");
   // Rodar esses comando no terminal para que ele aceite "Ç"
   system("powershell -NoProfile -Command \"$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()\"");
+
+  criarBanco();
   int op;
+
+
   do {
     printf("\nBem vindo ao C-Note\n");
-    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Limpar\n 4 - Sair\n\n ");
+    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
     scanf("%d", &op);
     getchar();
 
@@ -24,10 +28,8 @@ int main() {
         Register();
         break;
       case 3:
-        Clear();
-        break;
-      case 4:
         printf("Saindo do programa...\n");
+        exit(0);
         break;
       default:
         printf("Escolha uma opção invalida!");
@@ -94,9 +96,6 @@ void Login() {
     lerStringSegura(senha, MAX_SENHA);
 
     for (int i = 0; i < totalUser; i++) {
-      // printf("Digitado: Nome='%s', Senha='%s'\n", nome, senha);
-      // printf("Registrado: Nome='%s', Senha='%s'\n", usuarios[i].nome, usuarios[i].senha);
-      // entrar na função conta para que possa acessar as funçõs
       if (realizarlogin(nome, senha, usuarios[i])) {
         printf("Login realzado com sucesso!!\n");
         printf("\n iniciando seção..");
@@ -117,7 +116,7 @@ void Conta(User *user) {
     printf("\nBem vindo ao C-Note\n");
     printf(
         "\n Escolha umas das opçôes:\n 1 - Criar Nota\n 2 - Editar uma Nota\n 3 "
-        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Limpar\n 6 - Sair\n\n ");
+        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Sair\n\n ");
 
     scanf("%d", &op);
     getchar();
@@ -136,10 +135,8 @@ void Conta(User *user) {
         DeletarNota(user);
         break;
       case 5:
-        Clear();
-        break;
-      case 6:
         printf("Saindo do programa...\n");
+        exit(0);
         break;
       default:
         printf("Escolha uma opção invalida!");
@@ -259,12 +256,12 @@ void EditarNota(User *user) {
   lerStringSegura(EdicaoAtual.titulo, MAX_TITULO);
   printf("Texto atual: %s\n", CopiaAtual.texto);
   if (EdicaoAtual.titulo[0] != '\0') {
-    strcpy(CopiaAtual.titulo, EdicaoAtual.titulo);  
+    strcpy(CopiaAtual.titulo, EdicaoAtual.titulo);
   }
   printf("Novo Texto: ");
   lerStringSegura(EdicaoAtual.texto, MAX_TEXTO);
   if (EdicaoAtual.texto[0] != '\0') {
-    strcpy(CopiaAtual.texto, EdicaoAtual.texto);  
+    strcpy(CopiaAtual.texto, EdicaoAtual.texto);
   }
   for (int j = 0; j < 3; j++) {
     if (atual->tags.tag[j][0] != '\0') {
@@ -273,13 +270,13 @@ void EditarNota(User *user) {
       lerStringSegura(EdicaoAtual.tags.tag[j], MAX_TAG);
 
       if (EdicaoAtual.tags.tag[j][0] != '\0') {
-        strcpy(CopiaAtual.tags.tag[j], EdicaoAtual.tags.tag[j]);  
+        strcpy(CopiaAtual.tags.tag[j], EdicaoAtual.tags.tag[j]);
       }
     }
   }
-  atual->id = CopiaAtual.id;                 
-  strcpy(atual->titulo, CopiaAtual.titulo);  
-  strcpy(atual->texto, CopiaAtual.texto);    
+  atual->id = CopiaAtual.id;
+  strcpy(atual->titulo, CopiaAtual.titulo);
+  strcpy(atual->texto, CopiaAtual.texto);
   for (int i = 0; i < 3; i++) {
     strcpy(atual->tags.tag[i], CopiaAtual.tags.tag[i]);
   }
