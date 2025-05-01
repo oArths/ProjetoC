@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "../includes/includes.h"
 
 User *usuarios = NULL;
 User *userLogado = NULL;
@@ -12,7 +12,6 @@ int main() {
 
   criarBanco();
   int op;
-
 
   do {
     printf("\nBem vindo ao C-Note\n");
