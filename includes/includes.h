@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "sqlite3.h"
 
 #define bool _Bool
@@ -18,6 +17,7 @@
 #define MAX_NOME 40
 #define MAX_SENHA 20
 #define MAX_ID 9999
+
 typedef struct Tags {
   char tag[3][MAX_TAG + 1];
 } Tags;
@@ -47,8 +47,8 @@ void ListarNota(User *user);
 void DeletarNota(User *user);
 
 void limparBuffer();
-void lerString(char *str, int tamanhoMax);
-bool realizarlogin(char nome[], char senha[], User usuario);
+int lerStringSegura(char *destino, int tamanhoMax);
+bool realizarlogin(char *nome, char *senha, User usuario);
 
 #include "helps.h"
 
