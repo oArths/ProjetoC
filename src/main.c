@@ -1,10 +1,21 @@
 #include "../includes/includes.h"
 
+void Login();
+void Register();
+void Conta(User *user);
+void CriarNota(User *user);
+void EditarNota(User *user);
+void ListarNota(User *user);
+void DeletarNota(User *user);
+
 User *usuarios = NULL;
 User *userLogado = NULL;
 int totalUser = 0;
 
 int main() {
+
+//CRIAR UM INICIALIZADOR COM TODOS OS CODIGOS DE CONFIGURAÇÃO/BANCO DE DADOS ANTES DE INICIAR
+
   //* Definindo o locale para aceitar caracteres especiais como "Ç" e "ã"
   setlocale(LC_ALL, "pt_BR.UTF-8");
   // Rodar esses comando no terminal para que ele aceite "Ç"
@@ -59,26 +70,27 @@ void Register() {
     break;
   }
   while (1) {
-    printf("Digite sua senha: max 20 char\n");
+    printf("Digite sua senha: min 4 char\n");
     lerStringSegura(senha, MAX_SENHA);
     if (strlen(senha) < 4) {
       printf("Digite uma senha deve ter no minimo 4 caracteres");
     }
     break;
   }
+  
 
-  totalUser++;
-  usuarios = (User *)realloc(usuarios, totalUser * sizeof(User));
-  if (usuarios == NULL) {
-    printf("Erro ao alocar memória para novo usuário!\n");
-    exit(1);
-  }
-  usuarios[totalUser - 1].id = totalUser;
-  strncpy(usuarios[totalUser - 1].nome, nome, MAX_NOME);
-  usuarios[totalUser - 1].nome[MAX_NOME] = '\0';
-  strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA);
-  usuarios[totalUser - 1].senha[MAX_SENHA] = '\0';
-  usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como vazia
+  // totalUser++;
+  // usuarios = (User *)realloc(usuarios, totalUser * sizeof(User));
+  // if (usuarios == NULL) {
+  //   printf("Erro ao alocar memória para novo usuário!\n");
+  //   exit(1);
+  // }
+  // usuarios[totalUser - 1].id = totalUser;
+  // strncpy(usuarios[totalUser - 1].nome, nome, MAX_NOME);
+  // usuarios[totalUser - 1].nome[MAX_NOME] = '\0';
+  // strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA);
+  // usuarios[totalUser - 1].senha[MAX_SENHA] = '\0';
+  // usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como vazia
   printf("Usuário cadastrado com Sucesso!\n");
   Login();
 }
