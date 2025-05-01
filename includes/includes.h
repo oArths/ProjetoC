@@ -1,5 +1,6 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
+
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,8 +16,8 @@
 #define MAX_TEXTO 200
 #define MAX_TAG 20
 #define MAX_NOME 40
-#define MAX_SENHA 20
-#define MAX_ID 9999
+#define MAX_SENHA 9999
+#define MAX_ID 99999
 
 typedef struct Tags {
   char tag[3][MAX_TAG + 1];
@@ -36,20 +37,19 @@ typedef struct User {
   char senha[20];
   Nota *notas;
 } User;
+typedef struct {
+  sqlite3 *db;
+  char *err_msg;
+  int banco_status;
+  const char *query;
+  sqlite3_stmt *consultaPronta;
 
-void Login();
-void Register();
-bool criarBanco();
-void Conta(User *user);
-void CriarNota(User *user);
-void EditarNota(User *user);
-void ListarNota(User *user);
-void DeletarNota(User *user);
-
-void limparBuffer();
-int lerStringSegura(char *destino, int tamanhoMax);
-bool realizarlogin(char *nome, char *senha, User usuario);
+} Banco;
+typedef struct Resultado {
+  const char *query;
+} Resultado;
 
 #include "helps.h"
+#include "db.h"
 
 #endif
