@@ -1,6 +1,7 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
+#include <windows.h>
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -41,7 +42,7 @@ typedef struct {
   sqlite3 *db;
   char *err_msg;
   int banco_status;
-  const char *query;
+  char *query;
   sqlite3_stmt *consultaPronta;
 
 } Banco;

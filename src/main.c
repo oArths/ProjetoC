@@ -17,34 +17,38 @@ int main() {
 //CRIAR UM INICIALIZADOR COM TODOS OS CODIGOS DE CONFIGURAÇÃO/BANCO DE DADOS ANTES DE INICIAR
 
   //* Definindo o locale para aceitar caracteres especiais como "Ç" e "ã"
-  setlocale(LC_ALL, "pt_BR.UTF-8");
-  // Rodar esses comando no terminal para que ele aceite "Ç"
-  system("powershell -NoProfile -Command \"$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()\"");
+HWND hwnd = GetConsoleWindow();
+ShowWindow(hwnd, SW_MAXIMIZE);
 
-  criarBanco();
-  int op;
 
-  do {
-    printf("\nBem vindo ao C-Note\n");
-    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
-    scanf("%d", &op);
-    getchar();
+setlocale(LC_ALL, "pt_BR.UTF-8");
+// Rodar esses comando no terminal para que ele aceite "Ç"
+system("powershell -NoProfile -Command \"$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()\"");
+Banco Banco;
+criarBanco(&Banco);
+int op;
 
-    switch (op) {
-      case 1:
-        Login();
-        break;
-      case 2:
-        Register();
-        break;
-      case 3:
-        printf("Saindo do programa...\n");
-        exit(0);
-        break;
-      default:
-        printf("Escolha uma opção invalida!");
-        break;
-    }
+do {
+  printf("\nBem vindo ao C-Note\n");
+  printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
+  scanf("%d", &op);
+  getchar();
+
+  switch (op) {
+    case 1:
+      Login();
+      break;
+    case 2:
+      Register();
+      break;
+    case 3:
+      printf("Saindo do programa...\n");
+      exit(0);
+      break;
+    default:
+      printf("Escolha uma opção invalida!");
+      break;
+  }
   } while (op != 4);
   // Liberar a memória alocada para usuários ao sair
   for (int i = 0; i < totalUser; i++) {
@@ -107,7 +111,7 @@ void Login() {
     lerStringSegura(senha, MAX_SENHA);
 
     for (int i = 0; i < totalUser; i++) {
-      if (realizarlogin(nome, senha, usuarios[i])) {
+      if (realizarLogin(nome, senha)) {
         printf("Login realzado com sucesso!!\n");
         printf("\n iniciando seção..");
         userLogado = &usuarios[i];
@@ -141,6 +145,7 @@ void Conta(User *user) {
         break;
       case 3:
         ListarNota(user);
+
         break;
       case 4:
         DeletarNota(user);
