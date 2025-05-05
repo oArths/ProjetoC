@@ -1,4 +1,7 @@
-#include "../includes/includes.h"
+#include "modelos.h"
+#include "../includes/booting.h"
+#include "../includes/helps.h"
+#include "../includes/db.h"
 
 void Login();
 void Register();
@@ -13,42 +16,29 @@ User *userLogado = NULL;
 int totalUser = 0;
 
 int main() {
+  booting();
+  int op;
+  do {
+    printf("\nBem vindo ao C-Note\n");
+    printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
+    scanf("%d", &op);
+    getchar();
 
-//CRIAR UM INICIALIZADOR COM TODOS OS CODIGOS DE CONFIGURAÇÃO/BANCO DE DADOS ANTES DE INICIAR
-
-  //* Definindo o locale para aceitar caracteres especiais como "Ç" e "ã"
-HWND hwnd = GetConsoleWindow();
-ShowWindow(hwnd, SW_MAXIMIZE);
-
-
-setlocale(LC_ALL, "pt_BR.UTF-8");
-// Rodar esses comando no terminal para que ele aceite "Ç"
-system("powershell -NoProfile -Command \"$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()\"");
-Banco Banco;
-criarBanco(&Banco);
-int op;
-
-do {
-  printf("\nBem vindo ao C-Note\n");
-  printf("\n Escolha umas das opçôes:\n 1 - Login\n 2 - Registar\n 3 - Sair\n\n ");
-  scanf("%d", &op);
-  getchar();
-
-  switch (op) {
-    case 1:
-      Login();
-      break;
-    case 2:
-      Register();
-      break;
-    case 3:
-      printf("Saindo do programa...\n");
-      exit(0);
-      break;
-    default:
-      printf("Escolha uma opção invalida!");
-      break;
-  }
+    switch (op) {
+      case 1:
+        Login();
+        break;
+      case 2:
+        Register();
+        break;
+      case 3:
+        printf("Saindo do programa...\n");
+        exit(0);
+        break;
+      default:
+        printf("Escolha uma opção invalida!");
+        break;
+    }
   } while (op != 4);
   // Liberar a memória alocada para usuários ao sair
   for (int i = 0; i < totalUser; i++) {
@@ -81,7 +71,6 @@ void Register() {
     }
     break;
   }
-  
 
   // totalUser++;
   // usuarios = (User *)realloc(usuarios, totalUser * sizeof(User));
@@ -298,4 +287,6 @@ void EditarNota(User *user) {
   }
   printf("\nNota atualizada com sucesso!\n");
 }
-void DeletarNota(User *user) { printf("foi 3"); }
+void DeletarNota(User *user) {
+  printf("foi 3");
+}
