@@ -1,6 +1,6 @@
 TARGET = build/main.exe
-EXE = build\main.exe
-SRC = src/main.c src/sqlite3.c
+EXE = build\\main.exe
+SRC = src/main.c lib/sqlite3.c src/db.c src/helps.c src/booting.c
 INCLUDES = -Iincludes
 CC = gcc
 
@@ -13,4 +13,4 @@ all:
 
 	$(CC) $(SRC) $(RES) $(INCLUDES) -o $(TARGET)
 
-	$(EXE)
+	cmd /c $(EXE)
