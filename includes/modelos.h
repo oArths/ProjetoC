@@ -1,17 +1,13 @@
-#ifndef INCLUDES_H
-#define INCLUDES_H
-
+#ifndef MODELOS_H
+#define MODELOS_H
 #include <windows.h>
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sqlite3.h"
-
-#define bool _Bool
-#define true 1
-#define false 0
+#include <stdbool.h>
+#include <sqlite3.h>
 
 #define MAX_TITULO 20
 #define MAX_TEXTO 200
@@ -34,10 +30,11 @@ typedef struct Nota {
 
 typedef struct User {
   int id;
-  char nome[40];
-  char senha[20];
+  const char *nome;
+  const char *senha;
   Nota *notas;
 } User;
+
 typedef struct {
   sqlite3 *db;
   char *err_msg;
@@ -50,7 +47,9 @@ typedef struct Resultado {
   const char *query;
 } Resultado;
 
-#include "helps.h"
-#include "db.h"
+typedef struct Resposta {
+  bool error;
+  const char *data;
+} Resposta;
 
 #endif
