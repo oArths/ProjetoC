@@ -31,7 +31,7 @@ bool criarBanco(Banco *banco) {
   if (!conectarBanco(banco)) return false;
   sqlite3_exec(banco->db, "PRAGMA foreign_keys = ON;", 0, 0, 0);
 
-  banco->query = "CREATE TABLE IF NOT EXISTS User (Id INTEGER PRIMARY KEY, User TEXT NOT NULL, Senha TEXT NOT NULL);";
+  banco->query = "CREATE TABLE IF NOT EXISTS User (Id INTEGER PRIMARY KEY AUTOINCREMENT, User TEXT NOT NULL, Senha TEXT NOT NULL);";
   if (!executarQuery(banco, &resultado)) return false;
 
   banco->query = "CREATE TABLE IF NOT EXISTS Notas (Id INTEGER PRIMARY KEY, Titulo TEXT NOT NULL, Texto TEXT NOT NULL, Data DATETIME NOT NULL);";
@@ -67,21 +67,26 @@ Resposta criarUsuario(Banco *banco, User *user) {
   };
 
   sprintf(banco->query, "SELECT * FROM User WHERE User = '%s' AND Senha = '%s'", user->nome, user->senha);
-
+  
   if (!executarQuery(banco, &resultado)){
     resposta.error = true;
     resposta.data = "Erro ao executar a query";
     return resposta;
   }
-
+  
   if (strlen(resultado.query) > 1) {
     resposta.error = true;
     resposta.data = "usuario ja existe no banco";
     return resposta;
   }
-
   
-
+  sprintf(banco->query, "INSERT INTO User (User, Senha) VALUES ('%s', '%s')", user->nome, user->senha);
+  
+  if (!executarQuery(banco, &resultado)){
+    resposta.error = true;
+    resposta.data = "Erro ao executar a criação de usuario";
+    return resposta;
+  }
   resposta.error = false;
   resposta.data = "usuario criado com sucesso";
   
