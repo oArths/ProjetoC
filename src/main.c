@@ -120,7 +120,7 @@ void Conta(User *user) {
     printf("\nBem vindo ao C-Note\n");
     printf(
         "\n Escolha umas das opçôes:\n 1 - Criar Nota\n 2 - Editar uma Nota\n 3 "
-        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Sair\n\n ");
+        "- Listar Notas\n 4 - Excluir uma Nota\n 5 -  \n\n ");
 
     scanf("%d", &op);
     getchar();
