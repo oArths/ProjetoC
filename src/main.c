@@ -42,7 +42,7 @@ int main() {
   } while (op != 4);
   // Liberar a memória alocada para usuários ao sair
   for (int i = 0; i < totalUser; i++) {
-    Nota *atual = usuarios[i].notas;
+    Nota *atual = usuarios[i].notas;S
     while (atual != NULL) {
       Nota *proximo = atual->proximo;
       free(atual);
@@ -83,7 +83,8 @@ void Register() {
   // usuarios[totalUser - 1].nome[MAX_NOME] = '\0';
   // strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA);
   // usuarios[totalUser - 1].senha[MAX_SENHA] = '\0';
-  // usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como vazia
+  // usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como
+  // vazia
   printf("Usuário cadastrado com Sucesso!\n");
   Login();
 }
