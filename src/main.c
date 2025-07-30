@@ -75,9 +75,9 @@ void Register() {
   }
   usuarios[totalUser - 1].id = totalUser;
   strncpy(usuarios[totalUser - 1].nome, nome, MAX_NOME);
-  usuarios[totalUser - 1].nome[MAX_NOME] = '\0';
+  usuarios[totalUser - 1].nome[MAX_NOME -1] = '\0';
   strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA);
-  usuarios[totalUser - 1].senha[MAX_SENHA] = '\0';
+  usuarios[totalUser - 1].senha[MAX_SENHA -1] = '\0';
   usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como vazia
   printf("Usuário cadastrado com Sucesso!\n");
   Login();
@@ -265,7 +265,7 @@ void EditarNota(User *user) {
   for (int j = 0; j < 3; j++) {
     if (atual->tags.tag[j][0] != '\0') {
       printf("Tag %d°: %s\n", j, atual->tags.tag[j]);
-      printf("Nova Tag %d°: ");
+      printf("Nova Tag °: ");
       lerStringSegura(EdicaoAtual.tags.tag[j], MAX_TAG);
 
       if (EdicaoAtual.tags.tag[j][0] != '\0') {
@@ -281,4 +281,5 @@ void EditarNota(User *user) {
   }
   printf("\nNota atualizada com sucesso!\n");
 }
-void DeletarNota(User *user) { printf("foi 3"); }
+void DeletarNota(User *user) {
+}
