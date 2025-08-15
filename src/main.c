@@ -72,18 +72,17 @@ void Register() {
     break;
   }
 
-  // totalUser++;
-  // usuarios = (User *)realloc(usuarios, totalUser * sizeof(User));
-  // if (usuarios == NULL) {
-  //   printf("Erro ao alocar memória para novo usuário!\n");
-  //   exit(1);
-  // }
-  // usuarios[totalUser - 1].id = totalUser;
-  // strncpy(usuarios[totalUser - 1].nome, nome, MAX_NOME);
-  // usuarios[totalUser - 1].nome[MAX_NOME] = '\0';
-  // strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA);
-  // usuarios[totalUser - 1].senha[MAX_SENHA] = '\0';
-  // usuarios[totalUser - 1].notas = NULL;  // Inicializa a lista de notas do novo usuário como
+  totalUser++;
+  usuarios = (User *)realloc(usuarios, totalUser * sizeof(User));
+  if (usuarios == NULL) {
+    printf("Erro ao alocar memória para novo usuário!\n");
+    exit(1);
+  }
+strncpy(usuarios[totalUser - 1].nome, nome, MAX_NOME - 1);
+usuarios[totalUser - 1].nome[MAX_NOME - 1] = '\0';
+
+strncpy(usuarios[totalUser - 1].senha, senha, MAX_SENHA - 1);
+usuarios[totalUser - 1].senha[MAX_SENHA - 1] = '\0'; // Inicializa a lista de notas do novo usuário como
   // vazia
   printf("Usuário cadastrado com Sucesso!\n");
   Login();
@@ -121,7 +120,7 @@ void Conta(User *user) {
     printf("\nBem vindo ao C-Note\n");
     printf(
         "\n Escolha umas das opçôes:\n 1 - Criar Nota\n 2 - Editar uma Nota\n 3 "
-        "- Listar Notas\n 4 - Excluir uma Nota\n 5 -  \n\n ");
+        "- Listar Notas\n 4 - Excluir uma Nota\n 5 - Sair \n\n ");
 
     scanf("%d", &op);
     getchar();
@@ -195,7 +194,7 @@ void CriarNota(User *user) {
   novaNota->proximo = user->notas;  // Nova nota aponta para a antiga primeira nota
   user->notas = novaNota;           // Atualiza o ponteiro da lista de notas do usuário
 
-  printf("Nota Salva com sucesso!!\n");
+  printf("\n\n Nota Salva com sucesso!!\n");
 }
 void ListarNota(User *user) {
   // divide o tamanho total da Lista pela do primeiro item
@@ -272,7 +271,7 @@ void EditarNota(User *user) {
   for (int j = 0; j < 3; j++) {
     if (atual->tags.tag[j][0] != '\0') {
       printf("Tag %d°: %s\n", j, atual->tags.tag[j]);
-      printf("Nova Tag %d°: ", j);
+      printf("Nova Tag %d°: ", j + 1);
       lerStringSegura(EdicaoAtual.tags.tag[j], MAX_TAG);
 
       if (EdicaoAtual.tags.tag[j][0] != '\0') {

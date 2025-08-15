@@ -30,8 +30,8 @@ typedef struct Nota {
 
 typedef struct User {
   int id;
-  const char *nome;
-  const char *senha;
+    char nome[MAX_NOME];   // Mude para um array de char
+    char senha[MAX_SENHA];
   Nota *notas;
 } User;
 
